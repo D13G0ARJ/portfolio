@@ -1,16 +1,52 @@
-# React + Vite
+# Portfolio — Diego Rodríguez
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portafolio profesional construido como SPA moderna, con énfasis en **UX premium**, **modo claro/oscuro**, **i18n ES/EN** y una sección de proyectos “viva” que combina destacados curados + repositorios desde GitHub.
 
-Currently, two official plugins are available:
+## Tecnologías utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend
+- **React**: UI por componentes y renderizado declarativo.
+- **Vite**: tooling y bundling moderno para SPA.
 
-## React Compiler
+### UI / Design System
+- **Ant Design (v5)**: componentes base (Card, Button, Tag, Switch, Timeline, Grid, Divider, etc.).
+- **@ant-design/icons**: iconografía integrada con AntD.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Estilos
+- **Tailwind CSS**: utilidades para layout, spacing y responsividad.
+- **CSS custom + tokens**: refinamientos (glassmorphism, focus-visible, micro-interacciones).
+- Tipografía: **Inter** vía Google Fonts.
 
-## Expanding the ESLint configuration
+### Animaciones
+- **Framer Motion**: reveal al scroll y micro-interacciones.
+- **View Transition API (circular reveal)**: transición avanzada al alternar tema (cuando el navegador lo soporta).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Internacionalización (i18n)
+- **i18next + react-i18next**: traducciones ES/EN con persistencia del idioma.
+
+### Datos (GitHub)
+- **GitHub REST API**:
+	- `useGitHubProjects`: carga repos recientes con filtrado (excluye destacados, forks poco relevantes, etc.) y soporte de inclusión forzada.
+	- `useGitHubProfile`: stats del perfil (repos/followers/following) con cache en `sessionStorage` (TTL) para reducir llamadas.
+- **Arquitectura híbrida en Proyectos**:
+	- “Destacados” curados (manual) con jerarquía visual.
+	- “Otros Experimentos & Repositorios” desde la API.
+	- Overrides locales para mejorar copy/tagging cuando GitHub no provee buena descripción.
+
+## Theming (Light/Dark)
+- Persistencia en `localStorage`.
+- `data-theme` en `<html>` para alternar estilos globales.
+- Tokens de AntD configurados en `ConfigProvider` para mantener consistencia con la paleta del proyecto.
+
+## Accesibilidad y UX
+- Estados `:focus-visible` para navegación por teclado.
+- Controles del header con etiquetas explícitas (Idioma/Tema) para claridad.
+- Layout responsive (mobile-first) y cards con alturas consistentes.
+
+## Calidad / Tooling
+- **ESLint**: reglas base + plugins recomendados para React Hooks y Fast Refresh.
+
+## Estructura (alto nivel)
+- `src/components`: secciones UI (Hero, Skills, Experience, Projects, Footer, Header).
+- `src/hooks`: hooks de tema y de datos (`useTheme`, `useGitHubProjects`, `useGitHubProfile`).
+- `src/data`: traducciones i18n y data estática.

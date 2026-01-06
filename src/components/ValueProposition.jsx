@@ -32,7 +32,7 @@ const cardVariants = {
 function ValueCard({ icon, title, text, token }) {
   return (
     <motion.div variants={cardVariants} whileHover="hover" className="h-full">
-      <Card bordered={false} className="value-card h-full">
+      <Card variant="borderless" className="value-card h-full">
         <div className="flex flex-col items-center text-center gap-3">
           <motion.span
             variants={{ hover: { rotate: -6, scale: 1.1 } }}

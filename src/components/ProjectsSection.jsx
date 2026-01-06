@@ -1,12 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Alert, Button, Card, Col, Row, Skeleton, Space, Tag, Typography, theme } from 'antd'
+import { useMemo } from 'react'
+import { Alert, Button, Card, Col, Divider, Row, Skeleton, Space, Tag, Typography, theme } from 'antd'
 import { CodeOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { useGitHubProjects } from '../hooks/useGitHubProjects'
 
 const { Title, Paragraph, Text } = Typography
 
 const mainProjects = [
+  {
+    id: 'main-nexus',
+    name: 'Nexus WMS - Enterprise Resource Planning',
+    description:
+      'Sistema de Gestión de Almacenes (WMS) multi-sucursal de nivel empresarial. Diseñé una arquitectura híbrida avanzada: 1) Core Transaccional (Laravel 11): gestiona movimientos de inventario atómicos, trazabilidad completa y control de acceso granular (RBAC con Spatie). 2) Inteligencia de Datos (Python): integré un microservicio en Flask que analiza históricos de ventas para generar predicciones de demanda (Forecasting). 3) Alto Rendimiento: implementación de Jobs y Colas con Redis para importaciones masivas y notificaciones asíncronas, todo orquestado en contenedores Docker.',
+    html_url: 'https://github.com/D13G0ARJ/nexus-wms',
+    homepage: null,
+    topics: ['Laravel 11', 'Livewire 3', 'Python Microservice', 'Redis/Queues', 'Docker'],
+  },
   {
     id: 'main-academic',
     name: 'Sistema de Gestión Académica',
@@ -25,92 +35,40 @@ const mainProjects = [
     homepage: '',
     topics: ['Python', 'Google Gemini AI', 'CustomTkinter', 'RAG Logic'],
   },
-  {
-    id: 'main-mining',
-    name: 'Mining Shift Algorithm (N x M)',
-    description:
-      "Motor de planificación algorítmica de alta complejidad. Diseñé una estrategia jerárquica de 3 niveles (Ancla, Relevo Matemático y Agente Inteligente con 'Lookahead') para resolver la asignación de turnos bajo restricciones estrictas (Regla N x M). El sistema ejecuta validaciones en tiempo real y autocorrección de personal, garantizando la continuidad operativa sin fallos.",
-    html_url: 'https://github.com/D13G0ARJ/mining-supervisor-scheduler',
-    homepage: '',
-    topics: ['React 18', 'Lógica Pura', 'Modelo Matemático', 'Vite'],
-  },
 ]
-
-function isDetailedDescription(desc) {
-  if (!desc) return false
-  const trimmed = desc.trim()
-  return trimmed.length >= 30
-}
-
 function normalizeTopics(topics) {
   if (!Array.isArray(topics)) return []
   return topics.filter(Boolean).slice(0, 8)
 }
 
-function shouldShowRepo(repo) {
-  const hasGoodDescription = isDetailedDescription(repo.description)
-  const hasStars = (repo.stargazers_count || 0) > 0
-  return hasGoodDescription || hasStars
+function formatRepoTitle(name) {
+  const raw = String(name || '')
+  const spaced = raw.replace(/[-_]+/g, ' ').trim()
+  if (!spaced) return raw
+  return spaced
+    .split(' ')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
 }
 
-function sortRepos(a, b) {
-  const aPushed = new Date(a.pushed_at || 0).getTime()
-  const bPushed = new Date(b.pushed_at || 0).getTime()
-  if (bPushed !== aPushed) return bPushed - aPushed
-
-  const aStars = a.stargazers_count || 0
-  const bStars = b.stargazers_count || 0
-  if (bStars !== aStars) return bStars - aStars
-
-  return (a.name || '').localeCompare(b.name || '')
+function truncate(text, max = 100) {
+  const str = String(text || '').trim()
+  if (str.length <= max) return str
+  return `${str.slice(0, max - 1)}…`
 }
 
 export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false }) {
   const { t, i18n } = useTranslation()
   const { token } = theme.useToken()
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [repos, setRepos] = useState([])
-
-  useEffect(() => {
-    let cancelled = false
-
-    async function load() {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const url = `https://api.github.com/users/${username}/repos?per_page=100&sort=pushed&direction=desc`
-        const res = await fetch(url, {
-          headers: {
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        })
-
-        if (!res.ok) {
-          throw new Error(`GitHub API error: ${res.status}`)
-        }
-
-        const data = await res.json()
-        if (cancelled) return
-
-        const filtered = Array.isArray(data) ? data.filter(shouldShowRepo).sort(sortRepos) : []
-        setRepos(filtered)
-      } catch (e) {
-        if (!cancelled) setError(e)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-
-    load()
-
-    return () => {
-      cancelled = true
-    }
-  }, [username])
+  const featuredUrls = useMemo(() => mainProjects.map((p) => p.html_url).filter(Boolean), [])
+  const forcedRepoNames = useMemo(() => ['mining-supervisor-scheduler'], [])
+  const { repos: apiRepos, loading, error } = useGitHubProjects({
+    username,
+    excludeUrls: featuredUrls,
+    forceIncludeNames: forcedRepoNames,
+  })
 
   const tagStyle = useMemo(() => {
     return {
@@ -135,18 +93,8 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
   }, [isDark, token])
 
   const mergedProjects = useMemo(() => {
-    const mainUrls = new Set(mainProjects.map((p) => p.html_url))
-    const mainNames = new Set(mainProjects.map((p) => (p.name || '').toLowerCase()))
-
-    const rest = (Array.isArray(repos) ? repos : []).filter((r) => {
-      if (!r) return false
-      if (r.html_url && mainUrls.has(r.html_url)) return false
-      if ((r.name || '').toLowerCase() && mainNames.has((r.name || '').toLowerCase())) return false
-      return true
-    })
-
-    return [...mainProjects, ...rest]
-  }, [repos])
+    return [...mainProjects, ...(Array.isArray(apiRepos) ? apiRepos : [])]
+  }, [apiRepos])
 
   const projectsForRender = useMemo(() => {
     const lang = (i18n.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en'
@@ -168,6 +116,13 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
           en: 'Multi-branch Warehouse Management System built to showcase enterprise Laravel architecture. Includes granular RBAC (Spatie Permission), atomic inventory transactions, async bulk imports with queues/Redis, background PDF reporting, and a foundation for a Flask microservice for predictive analytics—fully containerized with Docker.',
         },
       },
+      'mining-supervisor-scheduler': {
+        topics: ['React 18', 'Algoritmos', 'Scheduling', 'Modelo N×M', 'Vite'],
+        description: {
+          es: "Motor de planificación algorítmica para asignación de turnos bajo restricciones estrictas (regla N×M). Incluye validaciones en tiempo real y lógica de autocorrección para garantizar continuidad operativa.",
+          en: 'Algorithmic scheduling engine for shift assignment under strict constraints (N×M rule). Includes real-time validations and self-correction logic to ensure operational continuity.',
+        },
+      },
     }
 
     return mergedProjects.map((repo) => {
@@ -184,13 +139,13 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
   }, [i18n.language, mergedProjects])
 
   const lastPushedAt = useMemo(() => {
-    if (!Array.isArray(repos) || repos.length === 0) return null
-    const max = repos.reduce((acc, r) => {
-      const ts = new Date(r?.pushed_at || 0).getTime()
+    if (!Array.isArray(apiRepos) || apiRepos.length === 0) return null
+    const max = apiRepos.reduce((acc, r) => {
+      const ts = new Date(r?.updated_at || 0).getTime()
       return ts > acc ? ts : acc
     }, 0)
     return max ? new Date(max) : null
-  }, [repos])
+  }, [apiRepos])
 
   const formattedLastPush = useMemo(() => {
     if (!lastPushedAt) return ''
@@ -269,36 +224,29 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
         />
       )}
 
-      {!loading && mergedProjects.length === 0 && (
+      {!loading && apiRepos.length === 0 && !error && (
         <Alert type="info" showIcon message={t('projects.empty')} />
       )}
 
-      {!loading && mergedProjects.length > 0 && (
+      {(mainProjects.length > 0 || (!loading && apiRepos.length > 0)) && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* 1) Destacados */}
           <Row gutter={[16, 16]} align="stretch">
-            {projectsForRender.map((repo, index) => {
+            {projectsForRender.slice(0, mainProjects.length).map((repo, index) => {
               const topics = normalizeTopics(repo.topics)
               const hasDemo = Boolean(repo.homepage)
 
-              const isFeatured = index < 3
               const isFeaturedMain = index === 0
-
-              const colProps = isFeatured
-                ? {
-                    xs: 24,
-                    md: isFeaturedMain ? 24 : 12,
-                    lg: isFeaturedMain ? 24 : 12,
-                  }
-                : {
-                    xs: 24,
-                    md: 12,
-                    lg: 8,
-                  }
+              const colProps = {
+                xs: 24,
+                md: isFeaturedMain ? 24 : 12,
+                lg: isFeaturedMain ? 24 : 12,
+              }
 
               return (
                 <Col key={repo.id} {...colProps} className="flex">
@@ -306,7 +254,7 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
                     title={repo.name}
                     hoverable
                     className="glass-card lift-card h-full flex flex-col"
-                    bordered
+                    variant="outlined"
                     style={{
                       borderRadius: 16,
                       flex: 1,
@@ -325,6 +273,71 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
                     {topics.length > 0 && (
                       <Space wrap>
                         {topics.slice(0, 8).map((topic) => (
+                          <Tag key={topic} style={tagStyle}>
+                            {topic}
+                          </Tag>
+                        ))}
+                      </Space>
+                    )}
+
+                    <Space wrap className="mt-auto" style={{ paddingTop: 8 }}>
+                      <Button type="primary" href={repo.html_url} target="_blank" rel="noreferrer">
+                        {t('projects.viewCode')}
+                      </Button>
+                      {hasDemo && (
+                        <Button href={repo.homepage} target="_blank" rel="noreferrer">
+                          {t('projects.demo')}
+                        </Button>
+                      )}
+                    </Space>
+                  </Card>
+                </Col>
+              )
+            })}
+          </Row>
+
+          {/* 2) Divisor */}
+          <Divider plain orientation="left" style={{ margin: '18px 0 14px' }}>
+            <span style={{ color: token.colorTextSecondary, fontWeight: 600 }}>
+              {t('projects.otherSection')}
+            </span>
+          </Divider>
+
+          {/* 3) Automáticos */}
+          <Row gutter={[16, 16]} align="stretch">
+            {projectsForRender.slice(mainProjects.length).map((repo) => {
+              const title = formatRepoTitle(repo.name)
+              const description = truncate(repo.description, 100)
+
+              const topics = normalizeTopics(repo.topics)
+              const inferredTags = topics.length > 0 ? topics : [repo.language].filter(Boolean)
+              const hasDemo = Boolean(repo.homepage)
+
+              return (
+                <Col key={repo.id} xs={24} md={12} lg={8} className="flex">
+                  <Card
+                    title={title}
+                    hoverable
+                    className="glass-card lift-card h-full flex flex-col"
+                    variant="outlined"
+                    style={{
+                      borderRadius: 16,
+                      flex: 1,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                    styles={{
+                      header: { borderColor: token.colorBorder },
+                      body: { display: 'flex', flexDirection: 'column', gap: 12, flex: 1 },
+                    }}
+                  >
+                    <Paragraph style={{ margin: 0, color: token.colorTextSecondary }}>
+                      {description}
+                    </Paragraph>
+
+                    {inferredTags.length > 0 && (
+                      <Space wrap>
+                        {inferredTags.slice(0, 8).map((topic) => (
                           <Tag key={topic} style={tagStyle}>
                             {topic}
                           </Tag>

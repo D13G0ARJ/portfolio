@@ -1,4 +1,4 @@
-import { Space, Switch, Typography, theme } from 'antd'
+import { Divider, Space, Switch, Typography, theme } from 'antd'
 import { MoonOutlined, SunOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { setLanguage } from '../i18n/i18n'
@@ -12,33 +12,45 @@ export default function HeaderBar({ isDark, onThemeChange }) {
 
   const isSpanish = i18n.language?.startsWith('es') ?? true
 
+  const labelClassName = `hidden sm:inline text-sm font-medium mr-2 ${isDark ? 'text-cream' : 'text-deep'}`
+
   return (
     <header
-      className="sticky top-0 z-40"
-      style={{
-        background: isDark ? 'rgba(3, 3, 3, 0.65)' : 'rgba(241, 239, 236, 0.8)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: isDark ? `1px solid ${token.colorBorder}` : '1px solid rgba(212, 201, 190, 0.65)',
-      }}
+      className={
+        `sticky top-0 z-50 w-full backdrop-blur-md shadow-sm ` +
+        (isDark ? 'bg-night/70 border-b border-taupe/25' : 'bg-cream/80 border-b border-taupe/60')
+      }
     >
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between gap-4 py-3 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+        <div className="flex items-center justify-between gap-4">
           <Text style={{ color: token.colorText, fontWeight: 600 }}>{t('brand')}</Text>
 
-          <Space size={10} align="center">
-            <Switch
-              size="small"
-              checked={isSpanish}
-              onChange={(checked) => setLanguage(checked ? 'es' : 'en')}
-              checkedChildren="ES"
-              unCheckedChildren="EN"
-            />
-            <ThemeToggle
-              checked={isDark}
-              onChange={onThemeChange}
-              checkedChildren={<MoonOutlined />}
-              unCheckedChildren={<SunOutlined />}
-            />
+          <Space
+            align="center"
+            split={<Divider type="vertical" style={{ borderColor: token.colorBorder }} />}
+            size={12}
+          >
+            <div className="flex items-center">
+              <span className={labelClassName}>Idioma</span>
+              <Switch
+                size="small"
+                aria-label="Idioma"
+                checked={isSpanish}
+                onChange={(checked) => setLanguage(checked ? 'es' : 'en')}
+                checkedChildren="ES"
+                unCheckedChildren="EN"
+              />
+            </div>
+
+            <div className="flex items-center">
+              <span className={labelClassName}>Tema</span>
+              <ThemeToggle
+                checked={isDark}
+                onChange={onThemeChange}
+                checkedChildren={<MoonOutlined />}
+                unCheckedChildren={<SunOutlined />}
+              />
+            </div>
           </Space>
         </div>
       </div>

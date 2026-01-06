@@ -110,7 +110,7 @@ export default function SkillsSection({ isDark = false }) {
                   </div>
                 </div>
               }
-              bordered
+              variant="outlined"
               className="glass-card"
               style={{
                 borderRadius: 16,

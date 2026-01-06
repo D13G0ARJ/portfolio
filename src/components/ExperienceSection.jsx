@@ -44,7 +44,7 @@ function ExperienceTags({ tags = [], token }) {
 function ExperienceCard({ item, token }) {
   return (
     <Card
-      bordered
+      variant="outlined"
       hoverable
       className="glass-card"
       style={{

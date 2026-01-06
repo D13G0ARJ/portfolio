@@ -23,6 +23,8 @@ function App() {
     colorTextBase: isDark ? '#F1EFEC' : '#123458',
     colorText: isDark ? '#F1EFEC' : '#123458',
     colorTextHeading: isDark ? '#F1EFEC' : '#123458',
+    colorTextSecondary: isDark ? 'rgba(241, 239, 236, 0.78)' : 'rgba(18, 52, 88, 0.78)',
+    colorTextTertiary: isDark ? 'rgba(241, 239, 236, 0.68)' : 'rgba(18, 52, 88, 0.68)',
     colorBorder: isDark ? 'rgba(212, 201, 190, 0.25)' : '#D4C9BE',
     borderRadius: 14,
     fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
@@ -48,7 +50,7 @@ function App() {
           <ExperienceSection />
           <ProjectsSection isDark={isDark} />
         </main>
-        <FooterBar />
+        <FooterBar isDark={isDark} />
       </div>
     </ConfigProvider>
   )

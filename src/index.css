@@ -1,0 +1,248 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F1EFEC;
+  --surface: rgba(212, 201, 190, 0.25);
+  --text: #123458;
+  --muted: rgba(18, 52, 88, 0.72);
+  --bg-pattern:
+    radial-gradient(circle at 82% 12%, rgba(212, 201, 190, 0.45), transparent 55%),
+    radial-gradient(circle at 10% 86%, rgba(212, 201, 190, 0.22), transparent 52%),
+    radial-gradient(#e5e7eb 1px, transparent 1px);
+  --bg-pattern-size: auto, auto, 22px 22px;
+  --bg-pattern-position: 0 0, 0 0, 0 0;
+  --vt-x: 50vw;
+  --vt-y: 50vh;
+  --vt-r: 120vmax;
+}
+
+html[data-theme='dark'] {
+  --bg: #030303;
+  --surface: rgba(212, 201, 190, 0.08);
+  --text: #F1EFEC;
+  --muted: rgba(241, 239, 236, 0.72);
+  --bg-pattern:
+    radial-gradient(circle at 18% 18%, rgba(212, 201, 190, 0.10), transparent 55%),
+    radial-gradient(circle at 75% 8%, rgba(212, 201, 190, 0.06), transparent 48%);
+  --bg-pattern-size: auto, auto;
+  --bg-pattern-position: 0 0, 0 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
+  background-position: var(--bg-pattern-position);
+  opacity: 0.2;
+}
+
+html[data-theme='dark'] body::before {
+  opacity: 0.9;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Micro-interacciones */
+:where(.ant-btn) {
+  transition: transform 0.12s ease;
+}
+
+:where(.ant-btn):active {
+  transform: scale(0.98);
+}
+
+.hero-cta :where(.ant-btn) {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.hero-cta :where(.ant-btn):hover {
+  transform: translateY(-2px);
+}
+
+.premium-card {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  will-change: transform;
+}
+
+/* Glassmorphism: aplica a Cards marcadas como .glass-card */
+.glass-card,
+.glass-card :where(.ant-card) {
+  backdrop-filter: blur(10px);
+}
+
+.glass-card.ant-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+html[data-theme='dark'] .glass-card.ant-card {
+  background: rgba(3, 3, 3, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 10px 45px rgba(0, 0, 0, 0.55) !important;
+}
+
+.glass-card.ant-card .ant-card-head {
+  background: transparent !important;
+}
+
+.glass-card.ant-card .ant-card-head,
+.glass-card.ant-card .ant-card-head-title {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+html[data-theme='dark'] .glass-card.ant-card .ant-card-head {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Hover: escala + borde azul principal */
+.glass-card.ant-card-hoverable {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  will-change: transform;
+}
+
+.glass-card.ant-card-hoverable:hover {
+  transform: scale(1.02);
+  border-color: #123458 !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.14) !important;
+}
+
+html[data-theme='dark'] .glass-card.ant-card-hoverable:hover {
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Proyectos: además de escala, sube un poco */
+.lift-card.ant-card-hoverable:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+/* Why Me: tarjetas minimalistas (sin borde visible, sombra en hover) */
+.value-card.ant-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.value-card.ant-card .ant-card-body {
+  padding: 18px !important;
+}
+
+.value-card.ant-card:hover {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme='dark'] .value-card.ant-card:hover {
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Tech Marquee: fade high-end en bordes */
+.tech-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+/* Timeline (Experience): evita recorte de fechas en labels cuando el dot es grande */
+.experience-timeline .ant-timeline-item {
+  overflow: visible;
+}
+
+.experience-timeline.ant-timeline.ant-timeline-alternate .ant-timeline-item-label {
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
+  box-sizing: border-box;
+  padding-inline: 0 46px;
+}
+
+.experience-timeline.ant-timeline.ant-timeline-alternate .ant-timeline-item-right .ant-timeline-item-label {
+  text-align: left;
+  padding-inline: 46px 0;
+}
+
+/* En modo left (mobile), también deja aire entre el dot y la fecha */
+.experience-timeline.ant-timeline.ant-timeline-left .ant-timeline-item-label {
+  overflow: visible;
+  white-space: normal;
+  line-height: 1.25;
+  padding-inline-end: 18px;
+}
+
+/* View Transition API: circular reveal */
+html.vt::view-transition-old(root),
+html.vt::view-transition-new(root) {
+  animation-duration: 650ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+html.vt::view-transition-new(root) {
+  animation-name: vt-circle-in;
+}
+
+html.vt::view-transition-old(root) {
+  animation-name: vt-circle-out;
+}
+
+@keyframes vt-circle-in {
+  from {
+    clip-path: circle(0px at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y));
+  }
+}
+
+@keyframes vt-circle-out {
+  from {
+    clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(0px at var(--vt-x) var(--vt-y));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.vt::view-transition-old(root),
+  html.vt::view-transition-new(root) {
+    animation: none;
+  }
+}

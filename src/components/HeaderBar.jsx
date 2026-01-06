@@ -1,4 +1,4 @@
-import { Button, Divider, Drawer, Grid, Menu, Space, Switch, Typography, theme } from 'antd'
+import { Button, Divider, Grid, Popover, Space, Switch, Typography, theme } from 'antd'
 import {
   InfoCircleOutlined,
   MenuOutlined,
@@ -22,7 +22,7 @@ export default function HeaderBar({ isDark, onThemeChange }) {
   const screens = useBreakpoint()
   const isMobile = !screens.md
 
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeKey, setActiveKey] = useState('#home')
   const lastLangChangeRef = useRef({ lang: null, at: 0 })
 
@@ -73,7 +73,7 @@ export default function HeaderBar({ isDark, onThemeChange }) {
     }
 
     setActiveKey(`#${id}`)
-    setDrawerOpen(false)
+    setMobileMenuOpen(false)
   }
 
   const applyLanguage = (lang) => {
@@ -84,7 +84,41 @@ export default function HeaderBar({ isDark, onThemeChange }) {
     setLanguage(lang)
   }
 
-  const drawerBg = token.colorBgBase
+  const floatingBg = token.colorBgBase
+
+  const mobileMenuContent = (
+    <div
+      className="w-48 flex flex-col gap-1"
+      style={{ background: floatingBg, fontFamily: token.fontFamily }}
+    >
+      {navItems.map((item) => {
+        const isActive = item.href === activeKey
+        return (
+          <button
+            key={item.href}
+            type="button"
+            onClick={() => handleNavClick(undefined, item.href)}
+            className={
+              'w-full flex items-center gap-3 text-left py-3 px-4 transition-colors ' +
+              (isActive
+                ? isDark
+                  ? 'bg-taupe/10 text-cream'
+                  : 'bg-taupe/20 text-deep'
+                : isDark
+                  ? 'text-cream/85 hover:bg-taupe/10 hover:text-cream'
+                  : 'text-deep/80 hover:bg-taupe/20 hover:text-deep')
+            }
+            style={{ touchAction: 'manipulation' }}
+          >
+            <span style={{ color: token.colorTextSecondary, display: 'grid', placeItems: 'center' }}>
+              {item.icon}
+            </span>
+            <span className="text-sm font-medium">{item.label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
 
   return (
     <header
@@ -129,13 +163,23 @@ export default function HeaderBar({ isDark, onThemeChange }) {
               </div>
 
               {isMobile && (
-                <Button
-                  type="text"
-                  aria-label="Menu"
-                  icon={<MenuOutlined />}
-                  onClick={() => setDrawerOpen(true)}
-                  style={{ color: token.colorText }}
-                />
+                <Popover
+                  trigger="click"
+                  placement="bottomRight"
+                  arrow={{ pointAtCenter: true }}
+                  open={mobileMenuOpen}
+                  onOpenChange={setMobileMenuOpen}
+                  content={mobileMenuContent}
+                  overlayInnerStyle={{ padding: 0, borderRadius: 12, overflow: 'hidden' }}
+                  overlayStyle={{ borderRadius: 12 }}
+                >
+                  <Button
+                    type="text"
+                    aria-label="Menu"
+                    icon={<MenuOutlined />}
+                    style={{ color: token.colorText }}
+                  />
+                </Popover>
               )}
             </Space>
           </div>
@@ -162,25 +206,6 @@ export default function HeaderBar({ isDark, onThemeChange }) {
         </div>
       </div>
 
-      <Drawer
-        placement="right"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        title={t('brand')}
-        styles={{
-          header: { background: drawerBg, borderBottom: `1px solid ${token.colorBorder}` },
-          body: { background: drawerBg, padding: 12 },
-        }}
-      >
-        <Menu
-          mode="inline"
-          selectable={false}
-          style={{ background: drawerBg, color: token.colorText, fontFamily: token.fontFamily }}
-          selectedKeys={[activeKey]}
-          items={navItems.map((item) => ({ key: item.href, label: item.label, icon: item.icon }))}
-          onClick={({ key }) => handleNavClick(undefined, key)}
-        />
-      </Drawer>
     </header>
   )
 }

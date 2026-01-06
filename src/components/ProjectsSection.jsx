@@ -11,8 +11,14 @@ const mainProjects = [
   {
     id: 'main-nexus',
     name: 'Nexus WMS - Enterprise Resource Planning',
-    description:
-      'Sistema de Gestión de Almacenes (WMS) multi-sucursal de nivel empresarial. Diseñé una arquitectura híbrida avanzada: 1) Core Transaccional (Laravel 11): gestiona movimientos de inventario atómicos, trazabilidad completa y control de acceso granular (RBAC con Spatie). 2) Inteligencia de Datos (Python): integré un microservicio en Flask que analiza históricos de ventas para generar predicciones de demanda (Forecasting). 3) Alto Rendimiento: implementación de Jobs y Colas con Redis para importaciones masivas y notificaciones asíncronas, todo orquestado en contenedores Docker.',
+    title: {
+      es: 'Nexus WMS - Enterprise Resource Planning',
+      en: 'Nexus WMS - Enterprise Resource Planning',
+    },
+    description: {
+      es: 'Sistema de Gestión de Almacenes (WMS) multi-sucursal de nivel empresarial. Diseñé una arquitectura híbrida avanzada: 1) Core Transaccional (Laravel 11): gestiona movimientos de inventario atómicos, trazabilidad completa y control de acceso granular. 2) Inteligencia de Datos (Python): microservicio Flask para predicción de demanda. 3) Alto Rendimiento: Jobs y Colas con Redis orquestados en Docker.',
+      en: 'Enterprise-grade Multi-branch Warehouse Management System (WMS). Designed an advanced hybrid architecture: 1) Transactional Core (Laravel 11): manages atomic inventory movements, full traceability, and granular access control. 2) Data Intelligence (Python): Flask microservice for demand forecasting. 3) High Performance: Redis Jobs and Queues orchestrated within Docker containers.',
+    },
     html_url: 'https://github.com/D13G0ARJ/nexus-wms',
     homepage: null,
     topics: ['Laravel 11', 'Livewire 3', 'Python Microservice', 'Redis/Queues', 'Docker'],
@@ -20,8 +26,14 @@ const mainProjects = [
   {
     id: 'main-academic',
     name: 'Sistema de Gestión Académica',
-    description:
-      'Plataforma integral para la administración de recursos universitarios. Diseñé una arquitectura escalable que gestiona relaciones complejas (Docentes-Aulas-Horarios) e implementa algoritmos de validación para prevenir conflictos de asignación en tiempo real. Incluye módulos de auditoría, seguridad basada en roles y gestión de respaldos.',
+    title: {
+      es: 'Sistema de Gestión Académica',
+      en: 'Academic Management System',
+    },
+    description: {
+      es: 'Plataforma integral para la administración de recursos universitarios. Diseñé una arquitectura escalable que gestiona relaciones complejas (Docentes-Aulas-Horarios) e implementa algoritmos de validación para prevenir conflictos. Incluye auditoría y seguridad basada en roles.',
+      en: 'Comprehensive platform for university resource administration. Designed a scalable architecture managing complex relationships (Teachers-Classrooms-Schedules) and implementing validation algorithms to prevent assignment conflicts in real-time. Includes auditing modules and role-based security.',
+    },
     html_url: 'https://github.com/D13G0ARJ/horario-universidad-',
     homepage: '',
     topics: ['Laravel 10', 'MySQL', 'Arquitectura MVC', 'AdminLTE'],
@@ -29,13 +41,28 @@ const mainProjects = [
   {
     id: 'main-ingechat',
     name: 'IngeChat 360° - Asistente Inteligente',
-    description:
-      'Aplicación de escritorio moderna para orientación estudiantil. Implementa una lógica híbrida de procesamiento de lenguaje natural: prioriza una base de conocimientos local (JSON) para respuestas inmediatas y conecta con la API de Google Gemini para consultas complejas, optimizando el consumo de tokens y la latencia.',
+    title: {
+      es: 'IngeChat 360° - Asistente Inteligente',
+      en: 'IngeChat 360° - Intelligent Assistant',
+    },
+    description: {
+      es: 'Aplicación de escritorio moderna para orientación estudiantil. Implementa lógica híbrida de NLP: prioriza base de conocimientos local (JSON) para respuestas inmediatas y conecta con API de Google Gemini para consultas complejas, optimizando latencia.',
+      en: 'Modern desktop application for student guidance. Implements hybrid NLP logic: prioritizes a local knowledge base (JSON) for immediate responses and connects with Google Gemini API for complex queries, optimizing token consumption and latency.',
+    },
     html_url: 'https://github.com/D13G0ARJ/IngeChatBot360',
     homepage: '',
     topics: ['Python', 'Google Gemini AI', 'CustomTkinter', 'RAG Logic'],
   },
 ]
+
+function resolveI18nText(value, lang) {
+  if (value && typeof value === 'object') {
+    if ('es' in value || 'en' in value) {
+      return value?.[lang] ?? value?.es ?? value?.en ?? ''
+    }
+  }
+  return value ?? ''
+}
 function normalizeTopics(topics) {
   if (!Array.isArray(topics)) return []
   return topics.filter(Boolean).slice(0, 8)
@@ -61,6 +88,10 @@ function truncate(text, max = 100) {
 export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false }) {
   const { t, i18n } = useTranslation()
   const { token } = theme.useToken()
+
+  const lang = useMemo(() => {
+    return (i18n.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en'
+  }, [i18n.language])
 
   const featuredUrls = useMemo(() => mainProjects.map((p) => p.html_url).filter(Boolean), [])
   const forcedRepoNames = useMemo(() => ['mining-supervisor-scheduler'], [])
@@ -97,8 +128,6 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
   }, [apiRepos])
 
   const projectsForRender = useMemo(() => {
-    const lang = (i18n.language || 'es').toLowerCase().startsWith('es') ? 'es' : 'en'
-
     const repoOverrides = {
       'nexus-wms': {
         topics: [
@@ -128,15 +157,22 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
     return mergedProjects.map((repo) => {
       const key = (repo?.name || '').toLowerCase()
       const override = repoOverrides[key]
-      if (!override) return repo
+      const base = { ...repo }
+
+      const nextTopics = override && Array.isArray(override.topics) ? override.topics : repo.topics
+      const nextDescription = override?.description
+        ? resolveI18nText(override.description, lang)
+        : resolveI18nText(repo.description, lang)
+      const nextTitle = resolveI18nText(repo.title, lang) || repo.name
 
       return {
-        ...repo,
-        description: override.description?.[lang] ?? repo.description,
-        topics: Array.isArray(override.topics) ? override.topics : repo.topics,
+        ...base,
+        name: nextTitle,
+        description: nextDescription,
+        topics: nextTopics,
       }
     })
-  }, [i18n.language, mergedProjects])
+  }, [lang, mergedProjects])
 
   const lastPushedAt = useMemo(() => {
     if (!Array.isArray(apiRepos) || apiRepos.length === 0) return null

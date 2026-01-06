@@ -17,7 +17,7 @@ export default function HeaderBar({ isDark, onThemeChange }) {
   return (
     <header
       className={
-        `sticky top-0 z-50 w-full backdrop-blur-md shadow-sm ` +
+        `sticky top-0 z-50 w-full relative isolate pointer-events-auto transform-gpu backdrop-blur-md shadow-sm ` +
         (isDark ? 'bg-night/70 border-b border-taupe/25' : 'bg-cream/80 border-b border-taupe/60')
       }
     >
@@ -29,20 +29,24 @@ export default function HeaderBar({ isDark, onThemeChange }) {
             align="center"
             split={<Divider type="vertical" style={{ borderColor: token.colorBorder }} />}
             size={12}
+            className="relative z-50 pointer-events-auto"
+            style={{ touchAction: 'manipulation' }}
           >
-            <div className="flex items-center">
+            <div className="flex items-center px-2 py-2 -mx-2 -my-2 rounded-md pointer-events-auto">
               <span className={labelClassName}>Idioma</span>
               <Switch
                 size="small"
                 aria-label="Idioma"
                 checked={isSpanish}
                 onChange={(checked) => setLanguage(checked ? 'es' : 'en')}
+                onClick={() => setLanguage(isSpanish ? 'en' : 'es')}
+                style={{ touchAction: 'manipulation' }}
                 checkedChildren="ES"
                 unCheckedChildren="EN"
               />
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center px-2 py-2 -mx-2 -my-2 rounded-md pointer-events-auto">
               <span className={labelClassName}>Tema</span>
               <ThemeToggle
                 checked={isDark}

@@ -82,7 +82,8 @@ function ExperienceCard({ item, token }) {
 export default function ExperienceSection() {
   const { t } = useTranslation()
   const { token } = theme.useToken()
-  const screens = Grid.useBreakpoint()
+  const { useBreakpoint } = Grid
+  const screens = useBreakpoint()
   const isMobile = !screens.md
 
   const items = t('experience.items', { returnObjects: true })
@@ -111,7 +112,7 @@ export default function ExperienceSection() {
         )
 
         return {
-          label: item.date,
+          label: isMobile ? undefined : item.date,
           dot,
           children: (
             <motion.div

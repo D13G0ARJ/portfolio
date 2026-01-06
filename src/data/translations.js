@@ -145,18 +145,18 @@ export const resources = {
         h2: '>_ Software Engineer | Full Stack & Web Ops',
         lead:
           'I build robust, scalable digital ecosystems. I combine Full Stack development (Laravel/Angular) with a DevOps-minded operational approach to turn complex business requirements into high-performance software with secure availability.',
+        micro:
+          'My approach: clear architecture, production-first operations, and measurable quality in every delivery.',
+        pills: {
+          arch: 'Enterprise Architecture',
+          ops: 'Web Ops & Production',
+          delivery: 'Delivery & Quality',
+        },
         cta: {
           contact: 'Contact me',
           whatsapp: 'WhatsApp',
           linkedin: 'LinkedIn',
           github: 'GitHub',
-          micro:
-            'My approach: clear architecture, production-first operations, and measurable quality in every delivery.',
-          pills: {
-            arch: 'Enterprise Architecture',
-            ops: 'Web Ops & Production',
-            delivery: 'Delivery & Quality',
-          },
         },
       },
       actions: {

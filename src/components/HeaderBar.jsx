@@ -1,4 +1,5 @@
-import { Divider, Space, Switch, Typography, theme } from 'antd'
+import { Space, Switch, Typography, theme } from 'antd'
+import { MoonOutlined, SunOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { setLanguage } from '../i18n/i18n'
 import ThemeToggle from './ui/ThemeToggle'
@@ -9,40 +10,37 @@ export default function HeaderBar({ isDark, onThemeChange }) {
   const { i18n, t } = useTranslation()
   const { token } = theme.useToken()
 
-  const isEnglish = i18n.language?.startsWith('en')
+  const isSpanish = i18n.language?.startsWith('es') ?? true
 
   return (
-    <header className="max-w-6xl mx-auto px-4 pt-6">
-      <div
-        className="flex items-center justify-between gap-4 rounded-2xl px-4 py-3"
-        style={{
-          background: token.colorBgContainer,
-          border: `1px solid ${token.colorBorder}`,
-        }}
-      >
-        <Text style={{ color: token.colorText, fontWeight: 600 }}>{t('brand')}</Text>
+    <header
+      className="sticky top-0 z-40"
+      style={{
+        background: isDark ? 'rgba(3, 3, 3, 0.65)' : 'rgba(241, 239, 236, 0.8)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: isDark ? `1px solid ${token.colorBorder}` : '1px solid rgba(212, 201, 190, 0.65)',
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex items-center justify-between gap-4 py-3 shadow-sm">
+          <Text style={{ color: token.colorText, fontWeight: 600 }}>{t('brand')}</Text>
 
-        <Space split={<Divider type="vertical" style={{ borderColor: token.colorBorder }} />} wrap>
-          <Space>
-            <Text type="secondary">{t('toggles.lang')}</Text>
+          <Space size={10} align="center">
             <Switch
-              checked={isEnglish}
-              onChange={(checked) => setLanguage(checked ? 'en' : 'es')}
-              checkedChildren="EN"
-              unCheckedChildren="ES"
+              size="small"
+              checked={isSpanish}
+              onChange={(checked) => setLanguage(checked ? 'es' : 'en')}
+              checkedChildren="ES"
+              unCheckedChildren="EN"
             />
-          </Space>
-
-          <Space>
-            <Text type="secondary">{t('toggles.theme')}</Text>
             <ThemeToggle
               checked={isDark}
               onChange={onThemeChange}
-              checkedLabel={t('toggles.dark')}
-              uncheckedLabel={t('toggles.light')}
+              checkedChildren={<MoonOutlined />}
+              unCheckedChildren={<SunOutlined />}
             />
           </Space>
-        </Space>
+        </div>
       </div>
     </header>
   )

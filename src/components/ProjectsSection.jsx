@@ -122,6 +122,18 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
     }
   }, [isDark, token])
 
+  const pillStyle = useMemo(() => {
+    return {
+      backgroundColor: isDark ? 'rgba(212, 201, 190, 0.08)' : token.colorBgLayout,
+      borderColor: isDark ? 'rgba(212, 201, 190, 0.28)' : token.colorBorder,
+      color: token.colorText,
+      fontWeight: 600,
+      marginInlineEnd: 0,
+      marginBottom: 0,
+      paddingInline: 10,
+    }
+  }, [isDark, token])
+
   const mergedProjects = useMemo(() => {
     const mainUrls = new Set(mainProjects.map((p) => p.html_url))
     const mainNames = new Set(mainProjects.map((p) => (p.name || '').toLowerCase()))
@@ -171,6 +183,28 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
     })
   }, [i18n.language, mergedProjects])
 
+  const lastPushedAt = useMemo(() => {
+    if (!Array.isArray(repos) || repos.length === 0) return null
+    const max = repos.reduce((acc, r) => {
+      const ts = new Date(r?.pushed_at || 0).getTime()
+      return ts > acc ? ts : acc
+    }, 0)
+    return max ? new Date(max) : null
+  }, [repos])
+
+  const formattedLastPush = useMemo(() => {
+    if (!lastPushedAt) return ''
+    try {
+      return new Intl.DateTimeFormat(i18n.language || 'es', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+      }).format(lastPushedAt)
+    } catch {
+      return lastPushedAt.toISOString().slice(0, 10)
+    }
+  }, [i18n.language, lastPushedAt])
+
   return (
     <section id="projects" className="max-w-6xl mx-auto px-4 py-10">
       <motion.div
@@ -179,15 +213,34 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="flex items-end justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <CodeOutlined style={{ fontSize: 22, color: token.colorTextSecondary }} />
-            <Title level={2} style={{ margin: 0, color: token.colorTextHeading }}>
-              {t('sections.projects')}
-            </Title>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-3">
+          <div>
+            <div className="flex items-center gap-3">
+              <CodeOutlined style={{ fontSize: 22, color: token.colorTextSecondary }} />
+              <Title level={2} style={{ margin: 0, color: token.colorTextHeading }}>
+                {t('sections.projects')}
+              </Title>
+            </div>
+            <Paragraph style={{ margin: '8px 0 0', color: token.colorTextSecondary }}>
+              {t('projects.subtitle')}
+            </Paragraph>
           </div>
           <Text type="secondary">github.com/{username}</Text>
         </div>
+
+        <Space size={8} wrap style={{ marginBottom: 14 }}>
+          <Tag style={pillStyle} bordered>
+            {t('projects.summary.featured')}: {mainProjects.length}
+          </Tag>
+          <Tag style={pillStyle} bordered>
+            {t('projects.summary.total')}: {projectsForRender.length}
+          </Tag>
+          {formattedLastPush && (
+            <Tag style={pillStyle} bordered>
+              {t('projects.summary.lastPush')}: {formattedLastPush}
+            </Tag>
+          )}
+        </Space>
       </motion.div>
 
       {loading && (
@@ -248,16 +301,16 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
                   }
 
               return (
-                <Col key={repo.id} {...colProps}>
+                <Col key={repo.id} {...colProps} className="flex">
                   <Card
                     title={repo.name}
                     hoverable
-                    className="glass-card lift-card"
+                    className="glass-card lift-card h-full flex flex-col"
                     bordered
                     style={{
                       borderRadius: 16,
-                      display: 'flex',
-                      flexDirection: 'column',
+                      flex: 1,
+                      width: '100%',
                       height: '100%',
                     }}
                     styles={{
@@ -279,18 +332,15 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
                       </Space>
                     )}
 
-                    <Space wrap style={{ marginTop: 'auto', paddingTop: 8 }}>
+                    <Space wrap className="mt-auto" style={{ paddingTop: 8 }}>
                       <Button type="primary" href={repo.html_url} target="_blank" rel="noreferrer">
                         {t('projects.viewCode')}
                       </Button>
-                      <Button
-                        disabled={!hasDemo}
-                        href={hasDemo ? repo.homepage : undefined}
-                        target={hasDemo ? '_blank' : undefined}
-                        rel={hasDemo ? 'noreferrer' : undefined}
-                      >
-                        {t('projects.demo')}
-                      </Button>
+                      {hasDemo && (
+                        <Button href={repo.homepage} target="_blank" rel="noreferrer">
+                          {t('projects.demo')}
+                        </Button>
+                      )}
                     </Space>
                   </Card>
                 </Col>

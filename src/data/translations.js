@@ -7,6 +7,13 @@ export const resources = {
         h2: '>_ Software Engineer | Full Stack & Web Ops',
         lead:
           'Especialista en la construcción de ecosistemas digitales robustos y escalables. Combino el desarrollo Full Stack (Laravel/Angular) con una mentalidad DevOps operativa para transformar requerimientos de negocio complejos en software de alto rendimiento y segura disponibilidad.',
+        micro:
+          'Mi enfoque: diseño arquitectura clara, automatizo operación en producción y entrego features con calidad medible.',
+        pills: {
+          arch: 'Arquitectura Enterprise',
+          ops: 'Web Ops & Producción',
+          delivery: 'Entrega & Calidad',
+        },
         cta: {
           contact: 'Contáctame',
           whatsapp: 'WhatsApp',
@@ -30,6 +37,12 @@ export const resources = {
         projects: 'Proyectos',
       },
       skills: {
+        subtitle: 'Resumen por áreas: herramientas y tecnologías con las que trabajo a diario.',
+        summary: {
+          tech: 'tecnologías',
+          categories: 'categorías',
+          core: 'Core',
+        },
         languages: 'Lenguajes de Programación',
         frameworks: 'Frameworks y Librerías',
         web: 'Desarrollo Web',
@@ -42,6 +55,12 @@ export const resources = {
         error: 'No se pudieron cargar los repositorios desde GitHub.',
         viewCode: 'Ver Código',
         demo: 'Ver demo',
+        subtitle: 'Casos destacados primero, seguido de repos recientes desde GitHub.',
+        summary: {
+          featured: 'Destacados',
+          total: 'Total',
+          lastPush: 'Último push',
+        },
         empty: 'No hay repositorios para mostrar con el filtro actual.',
       },
       value: {
@@ -67,6 +86,8 @@ export const resources = {
         },
       },
       experience: {
+        subtitle:
+          'Experiencia orientada a producción: desarrollo Full Stack, estabilidad operativa y mejoras continuas en entornos reales.',
         items: [
           {
             role: 'Desarrollador Full Stack & Web Ops',
@@ -94,11 +115,11 @@ export const resources = {
             description:
               'Garantía de operatividad de la plataforma educativa EDUQUIM (basada en Moodle). Ejecución de mantenimiento correctivo y evolutivo, gestión de bases de datos y soporte técnico, impactando a más de 200 estudiantes.',
             tags: [
-              { label: 'PHP' },
-              { label: 'SQL' },
-              { label: 'Moodle' },
-              { label: 'Linux' },
-              { label: 'Mantenimiento Web' },
+              { label: 'PHP', color: 'blue' },
+              { label: 'SQL', color: 'cyan' },
+              { label: 'Moodle', color: 'geekblue' },
+              { label: 'Linux', color: 'purple' },
+              { label: 'Mantenimiento Web', color: 'default' },
             ],
           },
         ],
@@ -119,6 +140,13 @@ export const resources = {
           whatsapp: 'WhatsApp',
           linkedin: 'LinkedIn',
           github: 'GitHub',
+          micro:
+            'My approach: clear architecture, production-first operations, and measurable quality in every delivery.',
+          pills: {
+            arch: 'Enterprise Architecture',
+            ops: 'Web Ops & Production',
+            delivery: 'Delivery & Quality',
+          },
         },
       },
       actions: {
@@ -137,6 +165,12 @@ export const resources = {
         projects: 'Projects',
       },
       skills: {
+        subtitle: 'A quick breakdown of the tools and technologies I use day to day.',
+        summary: {
+          tech: 'technologies',
+          categories: 'categories',
+          core: 'Core',
+        },
         languages: 'Programming Languages',
         frameworks: 'Frameworks & Libraries',
         web: 'Web Development',
@@ -149,6 +183,12 @@ export const resources = {
         error: 'Could not load repositories from GitHub.',
         viewCode: 'View Code',
         demo: 'Demo',
+        subtitle: 'Featured work first, followed by recent repositories from GitHub.',
+        summary: {
+          featured: 'Featured',
+          total: 'Total',
+          lastPush: 'Last push',
+        },
         empty: 'No repositories match the current filter.',
       },
       value: {
@@ -174,6 +214,8 @@ export const resources = {
         },
       },
       experience: {
+        subtitle:
+          'Production-oriented experience: Full Stack delivery, operational stability, and continuous improvements in real environments.',
         items: [
           {
             role: 'Full Stack Developer & Web Ops',
@@ -201,11 +243,11 @@ export const resources = {
             description:
               'Ensured operability of the EDUQUIM educational platform (Moodle-based). Performed corrective and evolutionary maintenance, database management and technical support, impacting 200+ students.',
             tags: [
-              { label: 'PHP' },
-              { label: 'SQL' },
-              { label: 'Moodle' },
-              { label: 'Linux' },
-              { label: 'Web Maintenance' },
+              { label: 'PHP', color: 'blue' },
+              { label: 'SQL', color: 'cyan' },
+              { label: 'Moodle', color: 'geekblue' },
+              { label: 'Linux', color: 'purple' },
+              { label: 'Web Maintenance', color: 'default' },
             ],
           },
         ],

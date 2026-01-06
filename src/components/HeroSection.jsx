@@ -1,4 +1,4 @@
-import { Button, Typography, theme } from 'antd'
+import { Button, Space, Tag, Typography, theme } from 'antd'
 import { GithubOutlined, LinkedinOutlined, MailOutlined, WhatsAppOutlined } from '@ant-design/icons'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -9,8 +9,18 @@ export default function HeroSection() {
   const { t } = useTranslation()
   const { token } = theme.useToken()
 
+  const pillStyle = {
+    backgroundColor: token.colorBgLayout,
+    borderColor: token.colorBorder,
+    color: token.colorText,
+    fontWeight: 600,
+    marginInlineEnd: 0,
+    marginBottom: 0,
+    paddingInline: 10,
+  }
+
   return (
-    <section className="max-w-6xl mx-auto px-4 pt-14 pb-10">
+    <section className="max-w-6xl mx-auto px-4 pt-14 pb-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,6 +47,22 @@ export default function HeroSection() {
         <Paragraph style={{ marginTop: 0, color: token.colorTextSecondary, fontSize: 16, lineHeight: 1.7 }}>
           {t('hero.lead')}
         </Paragraph>
+
+        <Paragraph style={{ margin: '10px 0 0', color: token.colorTextSecondary }}>
+          {t('hero.micro')}
+        </Paragraph>
+
+        <Space size={8} wrap style={{ marginTop: 10 }}>
+          <Tag style={pillStyle} bordered>
+            {t('hero.pills.arch')}
+          </Tag>
+          <Tag style={pillStyle} bordered>
+            {t('hero.pills.ops')}
+          </Tag>
+          <Tag style={pillStyle} bordered>
+            {t('hero.pills.delivery')}
+          </Tag>
+        </Space>
 
         <div className="hero-cta flex flex-wrap gap-3 mt-6">
           <Button

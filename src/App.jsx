@@ -44,8 +44,8 @@ function App() {
           <HeroSection />
           <SkillsSection isDark={isDark} />
           <TechMarquee />
-          <ExperienceSection />
           <ValueProposition isDark={isDark} />
+          <ExperienceSection />
           <ProjectsSection isDark={isDark} />
         </main>
         <FooterBar />

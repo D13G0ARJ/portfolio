@@ -129,11 +129,16 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" className="max-w-6xl mx-auto px-4 py-10">
-      <div className="flex items-center gap-3" style={{ marginBottom: 16 }}>
-        <RocketOutlined style={{ fontSize: 22, color: token.colorTextSecondary }} />
-        <Title level={2} style={{ margin: 0, color: token.colorTextHeading }}>
-          {t('sections.experience')}
-        </Title>
+      <div style={{ marginBottom: 16 }}>
+        <div className="flex items-center gap-3">
+          <RocketOutlined style={{ fontSize: 22, color: token.colorTextSecondary }} />
+          <Title level={2} style={{ margin: 0, color: token.colorTextHeading }}>
+            {t('sections.experience')}
+          </Title>
+        </div>
+        <Paragraph style={{ margin: '8px 0 0', color: token.colorTextSecondary, maxWidth: 860 }}>
+          {t('experience.subtitle')}
+        </Paragraph>
       </div>
 
       <Timeline className="experience-timeline" mode={isMobile ? 'left' : 'alternate'} items={timelineItems} />

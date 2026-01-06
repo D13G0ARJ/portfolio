@@ -18,15 +18,15 @@ function computeMaxRadius(x, y) {
   return Math.hypot(dx, dy)
 }
 
-export default function ThemeToggle({ checked, onChange, checkedLabel, uncheckedLabel }) {
+export default function ThemeToggle({ checked, onChange, checkedChildren, unCheckedChildren }) {
   const wrapRef = useRef(null)
 
   const labels = useMemo(() => {
     return {
-      checked: checkedLabel ?? 'Dark',
-      unchecked: uncheckedLabel ?? 'Light',
+      checked: checkedChildren ?? 'Dark',
+      unchecked: unCheckedChildren ?? 'Light',
     }
-  }, [checkedLabel, uncheckedLabel])
+  }, [checkedChildren, unCheckedChildren])
 
   const handleToggle = (event) => {
     const nextChecked = !checked
@@ -68,6 +68,7 @@ export default function ThemeToggle({ checked, onChange, checkedLabel, unchecked
   return (
     <span ref={wrapRef}>
       <Switch
+        size="small"
         checked={checked}
         onClick={handleToggle}
         checkedChildren={labels.checked}

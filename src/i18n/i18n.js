@@ -4,8 +4,24 @@ import { resources } from '../data/translations'
 
 const SUPPORTED = ['es', 'en']
 
+function safeGetItem(key) {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+function safeSetItem(key, value) {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    // Ignore storage failures (e.g., Safari private mode)
+  }
+}
+
 function getInitialLanguage() {
-  const stored = localStorage.getItem('lang')
+  const stored = safeGetItem('lang')
   if (stored && SUPPORTED.includes(stored)) return stored
 
   const nav = (navigator.language || 'es').slice(0, 2)
@@ -25,7 +41,12 @@ i18n.use(initReactI18next).init({
 
 export function setLanguage(lang) {
   if (!SUPPORTED.includes(lang)) return
-  localStorage.setItem('lang', lang)
+  safeSetItem('lang', lang)
+  try {
+    document.documentElement.lang = lang
+  } catch {
+    // no-op
+  }
   i18n.changeLanguage(lang)
 }
 

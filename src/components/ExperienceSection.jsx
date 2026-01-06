@@ -129,7 +129,7 @@ export default function ExperienceSection() {
     : []
 
   return (
-    <section id="experience" className="max-w-6xl mx-auto px-4 py-10">
+    <section id="experience" className="max-w-6xl mx-auto px-4 py-10 scroll-mt-24">
       <div style={{ marginBottom: 16 }}>
         <div className="flex items-center gap-3">
           <RocketOutlined style={{ fontSize: 22, color: token.colorTextSecondary }} />

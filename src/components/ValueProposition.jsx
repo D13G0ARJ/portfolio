@@ -89,7 +89,7 @@ export default function ValueProposition({ isDark = false }) {
   ]
 
   return (
-    <section id="why-me" style={{ background: sectionBg }}>
+    <section id="why-me" className="scroll-mt-24" style={{ background: sectionBg }}>
       <div className="max-w-6xl mx-auto px-4 py-12">
         <motion.div
           initial={{ opacity: 0, y: 14 }}

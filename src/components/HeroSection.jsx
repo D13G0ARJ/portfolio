@@ -20,7 +20,7 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 pt-14 pb-6">
+    <section id="home" className="max-w-6xl mx-auto px-4 pt-14 pb-6 scroll-mt-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

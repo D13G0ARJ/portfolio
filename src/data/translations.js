@@ -31,6 +31,10 @@ export const resources = {
         light: 'Claro',
         lang: 'Idioma',
       },
+      nav: {
+        home: 'Inicio',
+        about: 'Sobre mí',
+      },
       sections: {
         skills: 'Hard Skills',
         experience: 'Experiencia',
@@ -168,6 +172,10 @@ export const resources = {
         dark: 'Dark',
         light: 'Light',
         lang: 'Language',
+      },
+      nav: {
+        home: 'Home',
+        about: 'About',
       },
       sections: {
         skills: 'Hard Skills',

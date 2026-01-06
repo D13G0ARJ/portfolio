@@ -197,7 +197,7 @@ export default function ProjectsSection({ username = 'D13G0ARJ', isDark = false 
   }, [i18n.language, lastPushedAt])
 
   return (
-    <section id="projects" className="max-w-6xl mx-auto px-4 py-10">
+    <section id="projects" className="max-w-6xl mx-auto px-4 py-10 scroll-mt-24">
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}

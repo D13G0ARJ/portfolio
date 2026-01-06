@@ -60,7 +60,7 @@ export default function SkillsSection({ isDark = false }) {
   }
 
   return (
-    <section id="skills" className="max-w-6xl mx-auto px-4 py-10">
+    <section id="skills" className="max-w-6xl mx-auto px-4 py-10 scroll-mt-24">
       <div className="flex flex-col gap-3 mb-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
           <div>

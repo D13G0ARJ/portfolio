@@ -33,6 +33,9 @@ export const resources = {
       },
       nav: {
         home: 'Inicio',
+        skills: 'Habilidades',
+        experience: 'Experiencia',
+        projects: 'Proyectos',
         about: 'Sobre mí',
       },
       sections: {
@@ -175,6 +178,9 @@ export const resources = {
       },
       nav: {
         home: 'Home',
+        skills: 'Skills',
+        experience: 'Experience',
+        projects: 'Projects',
         about: 'About',
       },
       sections: {
